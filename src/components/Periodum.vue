@@ -105,7 +105,7 @@
     
     <router-view :loc="loc" v-if="!homepage" />
     <div v-if="homepage">
-      <div id="listmode" class="fade"> <ListDisplay :locale="loc" :elements="elements" @getElement="setElement" /> </div>
+      <!-- <div id="listmode" class="fade"> <ListDisplay :locale="loc" :elements="elements" @getElement="setElement" /> </div> -->
       <div id="tablemode" class="fade"> <TableDisplay :locale="loc" :elements="elements" @getElement="setElement" /> </div>
     </div>
   
@@ -118,7 +118,7 @@
     </div>
   </div>
 
-  <div v-if="visitedBefore() === 'false' && language === 'tr'" ><TOUR /></div>
+  <!-- <div v-if="visitedBefore() === 'false' && language === 'tr'" ><TOUR /></div> -->
 
   <footer v-if="!homepage" class="noselect">
     <a href="https://dar.vin/eadiscord_periodum" target="_blank" id="discordInvitation" class="social">
@@ -137,10 +137,9 @@
 </template>
 
 <script>
-import ListDisplay from '@/components/ListModeDisplay.vue'
+// import ListDisplay from '@/components/ListModeDisplay.vue'
 import TableDisplay from '@/components/TableModeDisplay.vue'
 import ElementModal from '@/components/ElementModal.vue';
-import TOUR from '@/addons/PageTour.vue'
 
 import ELEMENT from '@/resources/elements_main.json'
 
@@ -169,9 +168,8 @@ for (const obj2 of ELEMENT_LANGUAGE) {
 
 // All objects have been merged or added. Convert our map to an array.
 const ELEMENTS = Object.values(objectsById);
-// TOUR
 export default {
-  components: { ListDisplay, TableDisplay, ElementModal, TOUR },
+  components: { TableDisplay, ElementModal },
   name: 'PeriodumPage',
   data() {
     return {
@@ -298,9 +296,6 @@ export default {
       document.querySelector('.modules').classList.remove('inactive')
       document.querySelector('#tablePanelBtn').classList.add('inactive')
     },
-    visitedBefore() {
-      return localStorage.getItem('visited_before')
-    }
   },
   mounted() {
     this.getUserLanguage()
@@ -334,23 +329,27 @@ export default {
     }
   }
 
+  .header {
+    visibility: hidden;
+  }
+
   #tablemode  {
     display: block;
     height: fit-content;
 
-    @media screen and (max-width: 720px) {
-      display: none;
-    }
+    // @media screen and (max-width: 720px) {
+    //   display: none;
+    // }
   }
   #listmode   {
     display: none; 
 
-    @media screen and (max-width: 720px) {
-      display: block;
-      width: 90vw;
+    // @media screen and (max-width: 720px) {
+    //   display: block;
+    //   width: 90vw;
 
-      padding-bottom: 30vw;
-    }
+    //   padding-bottom: 30vw;
+    // }
   }
 
   .margin {

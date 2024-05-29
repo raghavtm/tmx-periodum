@@ -147,10 +147,7 @@
       } 
     },
     methods: {
-      purgeSettings(sector) {
-        if (sector === 'pagetour') {
-          localStorage.setItem('visited_before', 'false')
-        }
+      purgeSettings() {
       }
     }
   }

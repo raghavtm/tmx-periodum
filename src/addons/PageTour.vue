@@ -267,7 +267,6 @@ export default {
         document.querySelector('.pageTourContainerTable').remove()
         document.querySelector('#table_moduleBtn_filterMode').dispatchEvent(new Event('click'))
         
-        localStorage.setItem('visited_before', 'true')
       }
     },
     highlight(options) {

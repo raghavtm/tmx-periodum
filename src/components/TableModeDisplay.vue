@@ -828,6 +828,7 @@ export default {
     }
     
     #thanks-bionluk {
+      display: none;
       position: absolute;
       top: -4vw;
       left: .8vw;
