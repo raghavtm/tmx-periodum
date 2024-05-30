@@ -13,7 +13,6 @@
 			<input type="search" name="search" id="modalSearch" :placeholder="this.locale.misc.modalSearch_text" autocomplete="off" @input="modalSearching($event)">
 		</div>
 
-		<infoBar :infoText="locale.tooltip.click_to_copy" />
 		<!-- Element Bilgileri -->
 		<div v-if="!eaContentView" class="text-left">
 			<div class="essentials">
@@ -35,10 +34,6 @@
 				<div v-if="element.phase_at_stp"><ElementItem :title="this.locale.elements.modal_content.phase_at_stp" :value="element.phase_at_stp" /></div>
 				<div v-show="this.misc.spectrum !== null" class="spectrum noselect" @click="imagezoom($event)"><span>{{ this.locale.elements.modal_content.spectrum }}</span><img :src="this.misc.spectrum" alt=""></div>
 
-				<div class="flex-between">
-					<div id="modal_link" style="justify-self: center; margin-top: 1rem;"><a :href="this.locale.elements.modal_content.article !== 'Wikipedia' ? 'http://evrimagaci.org/s/'+ element.ea_content_id : element.wikipedia" target="_blank"> {{ this.locale.elements.modal_content.article }}</a></div>
-					<div id="modal_link" style="justify-self: center; margin-top: 1rem;"><socialButtons class="align-center" :locale="locale" :number="element.number" :name="element.name" /></div>
-				</div>
 			</div>
 			<!-- <div class="spectrum"><img :src="require(`@/resources/img/misc/spectrum/${element.symbol}_hd.jpg`)" alt=""></div> -->
 
@@ -354,13 +349,11 @@
 
 <script>
 	import ElementItem from './ElementItem.vue';
-	import infoBar from '../addons/infoBar.vue';
-	import socialButtons from '../addons/socialButtons.vue';
 	// eslint-disable-next-line no-unused-vars
 	import { nextTick } from 'vue'
 
 	export default {
-		components: { ElementItem, infoBar, socialButtons },
+		components: { ElementItem },
 		props: {
 			element: Object,
 			toggleModal: Boolean,
