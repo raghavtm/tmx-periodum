@@ -3,12 +3,6 @@
 		'modal hidden': toggleModal === true,
 		'modal': toggleModal === false
 	}">
-		<!-- <div class="moreInfoBtn" @click.prevent="displayContent(element.ea_content_id)">
-			<div v-show="!eaContentView">
-				<a href="#">Okuma modu</a>
-			</div>
-			<a v-show="eaContentView" href="#">Detaylar</a>
-		</div> -->
 		<div class="modal_search">
 			<input type="search" name="search" id="modalSearch" :placeholder="this.locale.misc.modalSearch_text" autocomplete="off" @input="modalSearching($event)">
 		</div>

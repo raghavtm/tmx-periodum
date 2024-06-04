@@ -104,31 +104,19 @@
         this.modalViewable = false
       },
       heatState(check, element) {
-        if (check === 'uncertain') {
-          if (
-            this.heat_view === true && (element.boil_use === '' && element.melt_use === '') ||
-            this.heat_view === true && (element.melt_use === '' && this.heat_value <= element.boil_use) ||
-            this.heat_view === true && (element.boil_use === '' && this.heat_value <= element.melt_use)
-          ) return true
-          else return false
-        }
-        if (check === 'solid') {
-          if (
-            this.heat_view === true && (element.melt_use !== '' && this.heat_value <= element.melt_use)
-          ) return true
-          else return false
-        }
-        if (check === 'liquid') {
-          if (
-            this.heat_view === true && element.melt_use !== '' && this.heat_value >= element.melt_use
-          ) return true
-          else return false
-        }
-        if (check === 'gas') {
-          if (
-            this.heat_view === true && element.boil_use !== '' && this.heat_value >= element.boil_use
-          ) return true
-          else return false
+        switch (check) {
+          case 'uncertain':
+            return this.heat_view && ((element.boil_use === '' && element.melt_use === '') ||
+              (element.melt_use === '' && this.heat_value <= element.boil_use) ||
+              (element.boil_use === '' && this.heat_value <= element.melt_use));
+          case 'solid':
+            return this.heat_view && (element.melt_use !== '' && this.heat_value <= element.melt_use);
+          case 'liquid':
+            return this.heat_view && element.melt_use !== '' && this.heat_value >= element.melt_use;
+          case 'gas':
+            return this.heat_view && element.boil_use !== '' && this.heat_value >= element.boil_use;
+          default:
+            return false;
         }
       },
       displayHeatState(element) {

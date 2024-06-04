@@ -8,21 +8,6 @@ const routes = [
       name: 'home',
       component: () => import('../App.vue')
    },
-   {
-     path: '/kunye',
-     name: 'kunye',
-     component: () => import('../pages/credits-page.vue')
-   },
-   {
-     path: '/hakkinda',
-     name: 'hakkında',
-     component: () => import('../pages/about-page.vue')
-   },
-   {
-     path: '/bilgi',
-     name: 'bilgi',
-     component: () => import('../pages/info-page.vue')
-   }
 ]
 
 const router = createRouter({

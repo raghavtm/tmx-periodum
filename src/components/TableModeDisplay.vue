@@ -4,9 +4,6 @@
     <div v-show="table_panelMode" class="table_tabs fade">
       <button class="btn" :style="[table_filterMode ? { border: 'solid 1px #e5bb09' }   : {color: '#e5bb09'}]" id="table_moduleBtn_filterMode"   @click="toggleTablePanel('filter')">{{ locale.modules.group }}</button>
       <button class="btn" :style="[table_heatMode ? { border: 'solid 1px #e5bb09' }     : {color: '#e5bb09'}]" id="table_moduleBtn_heatMode"     @click="toggleTablePanel('heat')">{{ locale.modules.heat }}</button>
-      <!-- <button class="btn" :style="[table_articleMode ? { border: 'solid 1px #e5bb09' }  : {color: '#e5bb09'}]" id="table_moduleBtn_articleMode"  @click="toggleTablePanel('article')">Makale</button> -->
-      <!-- <button class="btn" :style="[table_compoundMode ? { border: 'solid 1px #e5bb09' } : {color: '#e5bb09'}]" id="table_moduleBtn_compoundMode" @click="toggleTablePanel('compound')">Bileşik</button> -->
-      <!-- <button class="btn" :style="[table_summaryMode ? { border: 'solid 1px #e5bb09' } : {color: '#e5bb09'}]"  id="table_moduleBtn_summaryMode"  @click="toggleTablePanel('summary')">Özet</button> -->
     </div>
 
     <div class="search table">
@@ -112,34 +109,10 @@
     </div>
   </div>
   
-  <div v-show="table_panelMode" class="thanks mute flex-start margin">
-    <a class="fade" href="https://bionluk.com" target="_blank">
-    <img id="thanks-bionluk" src="../resources/img/bionluk.png" alt="bionluk logo">
-    </a>
-    <span>{{ locale.misc.thanks }}</span>
-  </div>
 </template>
 
 <script>
 import TableItem from '@/components/TableModeItem.vue'
-// import infoBar from '../addons/infoBar.vue';
-// <infoBar class="infoBar" :fontSize="'.8vw'" :infoText="'Atomik kütle araması için \'.\' işaretini kullan.'" />
-
-// const sqlite3 = require('sqlite3').verbose()
-// let sql;
-
-// const COMPOUNDSS = require("../resources/db.sql");
-// const db = new sqlite3.Database(COMPOUNDSS, sqlite3.OPEN_READONLY, (err) => {
-//   if (err) return console.error(err.message);
-// })
-
-
-// sql = `SELECT * FROM compounds`
-
-// db.all(sql, [], (err, rows) => {
-//   if (err) return console.error(err.message);
-//   rows.forEach(row => console.log(row))
-// })
 
 export default {
   components: { TableItem },
@@ -191,16 +164,11 @@ export default {
         F: 'unit => (unit+459.67)*5/9'
       },
       heat_toDisplay_table: 0,
-      flag: {
-        tr:  require("../resources/locale/flags/tr.svg"),
-        en:  require("../resources/locale/flags/en.svg"),
-      },
       language: 'en'
     }
   },
   methods: {
     toggleModal($event, el) {
-      // if($event.target.classList.contains('modal-open') || $event.target.classList.contains('details-button'))
       this.$emit('getElement', el)
       document.body.classList.add('active_modal');
     },
@@ -559,7 +527,7 @@ export default {
       this.metric_Initials.F = toF(Number(this.metric_Initials.K))
 
       const SELECTION = document.querySelector('.metricmenu_table').textContent
-      this.heat_toDisplay_table = SELECTION === 'C' ? this.metric_Initials.C : SELECTION === 'F' ? this.metric_Initials.F : this.metric_Initials.K;
+      this.heat_toDisplay_table = this.metric_Initials?.[SELECTION]
 
       const BUTTON_UNCERTAIN = document.querySelector('#uncertain')
       const BUTTON_SOLID = document.querySelector('#solid')
@@ -616,9 +584,8 @@ export default {
       document.querySelector('.metricmenu_table').textContent = SELECTION
 
       this.heatValue = this.metric_Initials.K
-      document.querySelector('#heatinput_table').value = SELECTION === 'C' ? this.metric_Initials.C : SELECTION === 'F' ? this.metric_Initials.F : this.metric_Initials.K;
-
-      this.heat_toDisplay_table = SELECTION === 'C' ? this.metric_Initials.C : SELECTION === 'F' ? this.metric_Initials.F : this.metric_Initials.K;
+      document.querySelector('#heatinput_table').value = this.metric_Initials?.[SELECTION]
+      this.heat_toDisplay_table = this.metric_Initials?.[SELECTION]
     },
     async compoundAdd($event) {
       const d = $event.target.classList.contains('table_elementContainer') ? $event.target.cloneNode(true) : $event.target.closest('.table_elementContainer').cloneNode(true);
@@ -812,38 +779,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  .infoBar {
-    position: relative;
-  }
-  .thanks {
-    position: relative;
-    margin-top: .7vw;
-    width: 20rem;
-    word-wrap: break-word;
-    span {
-      font-size: .6vw;
-      display: none;
-      color: white;
-      transition: all 1000ms linear;
-    }
-    
-    #thanks-bionluk {
-      display: none;
-      position: absolute;
-      top: -4vw;
-      left: .8vw;
-      width: 3vw;
-    }
-
-    &:hover {
-      span {
-        position: absolute;
-        display: block;
-      }
-      opacity: 1;
-    }
-  }
-
   .search {
     grid-row-start: 1; grid-column-start: 13; grid-column-end: 18;
     #tableSearch {
