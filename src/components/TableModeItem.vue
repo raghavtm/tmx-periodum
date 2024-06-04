@@ -212,6 +212,10 @@
   }
 
   .table_symbol {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+
     font-size: 1.5vmax;
     font-weight: bold;
     letter-spacing: normal;
