@@ -1,7 +1,7 @@
 const { defineConfig } = require('@vue/cli-service')
 module.exports = defineConfig({
   transpileDependencies: true,
-  publicPath: '',
+  publicPath: '/teaching-tools/periodic-table',
   pwa: {
     manifestOptions: {
       name: "Periodum by Evrim Ağacı",

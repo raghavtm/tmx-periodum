@@ -4,7 +4,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 
 const routes = [
    {
-      path: '/',
+      path: '/teaching-tools/periodic-table',
       name: 'home',
       component: () => import('../App.vue')
    },
