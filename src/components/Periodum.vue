@@ -39,9 +39,6 @@ export default {
       locale: {
         en: require("../resources/locale/en/general.json")
       },
-      elementLanguage: {
-        en:       require("../resources/locale/en/elements_text.json"),
-      },
       language: 'en',
       modalkey: 0
     }

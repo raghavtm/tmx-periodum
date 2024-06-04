@@ -137,8 +137,8 @@
 
 <style lang="scss" scoped>
   .table_elementContainer {
-    height: 4.1vmax;
-    width: 4.1vmax;
+    height: 4.7vmax;
+    width: 4.7vmax;
     
     border: 1px double #1d232f;
     border-radius: .3rem;
@@ -212,7 +212,7 @@
   }
 
   .table_symbol {
-    font-size: 1.1vmax;
+    font-size: 1.5vmax;
     font-weight: bold;
     letter-spacing: normal;
     filter: drop-shadow(0 0 5px rgba(255,255,255, .1));
@@ -226,7 +226,7 @@
   }
   .table_name {
     color: inherit;
-    font-size: .45vw;
+    font-size: .55vw;
     opacity: .9;
     opacity: .7;
   }

@@ -800,6 +800,7 @@ export default {
     display: grid;
     grid-template-columns: repeat(18, 1fr);
     grid-template-rows: repeat(8, 1fr);
+    gap: 2px;
   }
   .table_tabs {
     grid-row-start: 1; grid-row-end: 1; grid-column-start: 3; grid-column-end: 13;
