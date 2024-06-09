@@ -500,48 +500,47 @@ export default {
       }
     },
     sliderChange() {
-      if (this.heatValue !== 298.15 && !document.querySelector('#table_moduleBtn_heatMode').textContent.includes('🗘')) document.querySelector('#table_moduleBtn_heatMode').textContent = '🗘 ' + this.locale.modules.heat;
-      const STATES = {
-        uncertain: 'uncertain',
-        solid: 'solid',
-        gas: 'gas',
-        liquid: 'liquid',
-      };
 
-      Object.keys(STATES).forEach(state => document.querySelectorAll(`.${state}`).forEach(function(el) {
-        el.removeAttribute('class')
-        el.classList.add(`table_elementContainer`)
-        el.classList.add(`flex-evenly`)
-        el.classList.add(`flex-column`)
-        el.classList.add(`${state}`)
-        el.classList.remove('mute')
-        el.classList.remove('glow')
-      }))
-      
-      this.metric_Initials.K = this.heatValue
+    // Define STATES constant
+    const STATES = {
+      uncertain: 'uncertain',
+      solid: 'solid',
+      gas: 'gas',
+      liquid: 'liquid',
+    };
 
-      const toC = eval(this.metricConvertion.C)
-      const toF = eval(this.metricConvertion.F)
+    // Update element classes
+    Object.values(STATES).forEach(state => {
+      document.querySelectorAll(`.${state}`).forEach(el => {
+        el.className = `table_elementContainer flex-evenly flex-column ${state}`;
+      });
+    });
 
-      this.metric_Initials.C = toC(Number(this.metric_Initials.K))
-      this.metric_Initials.F = toF(Number(this.metric_Initials.K))
+    this.metric_Initials.K = this.heatValue;
+    const toC = eval(this.metricConvertion.C);
+    const toF = eval(this.metricConvertion.F);
+    this.metric_Initials.C = toC(Number(this.metric_Initials.K));
+    this.metric_Initials.F = toF(Number(this.metric_Initials.K));
 
-      const SELECTION = document.querySelector('.metricmenu_table').textContent
-      this.heat_toDisplay_table = this.metric_Initials?.[SELECTION]
+    // Update displayed heat value
+    const SELECTION = document.querySelector('.metricmenu_table').textContent;
+    this.heat_toDisplay_table = this.metric_Initials?.[SELECTION];
 
-      const BUTTON_UNCERTAIN = document.querySelector('#uncertain')
-      const BUTTON_SOLID = document.querySelector('#solid')
-      const BUTTON_LIQUID = document.querySelector('#liquid')
-      const BUTTON_GAS = document.querySelector('#gas')
+    // Button activation/deactivation
+    const buttonStates = {
+      uncertain: document.querySelector('#uncertain'),
+      solid: document.querySelector('#solid'),
+      liquid: document.querySelector('#liquid'),
+      gas: document.querySelector('#gas'),
+    };
 
-      document.querySelectorAll('.uncertain').length >= 1
-      ? BUTTON_UNCERTAIN.classList.remove('inactive') : BUTTON_UNCERTAIN.classList.add('inactive')
-      document.querySelectorAll('.liquid').length >= 1
-      ? BUTTON_LIQUID.classList.remove('inactive') : BUTTON_LIQUID.classList.add('inactive')
-      document.querySelectorAll('.gas').length >= 1
-      ? BUTTON_GAS.classList.remove('inactive') : BUTTON_GAS.classList.add('inactive')
-      document.querySelectorAll('.solid').length >= 1
-      ? BUTTON_SOLID.classList.remove('inactive') : BUTTON_SOLID.classList.add('inactive')
+    Object.keys(buttonStates).forEach(state => {
+      const button = buttonStates[state];
+      document.querySelectorAll(`.${state}`).length >= 1
+        ? button.classList.remove('inactive')
+        : button.classList.add('inactive');
+    });
+    console.timeEnd('slideChange')
     },
     heatinputAction() {
       const INPUT_FIELD = document.querySelector('#heatinput_table')
@@ -563,7 +562,6 @@ export default {
         SLIDER.value = +(INPUT_FIELD.value)
         SLIDER.dispatchEvent(new Event('input'));
       }
-
       this.sliderChange()
       return
     },
