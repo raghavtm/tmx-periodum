@@ -540,7 +540,6 @@ export default {
         ? button.classList.remove('inactive')
         : button.classList.add('inactive');
     });
-    console.timeEnd('slideChange')
     },
     heatinputAction() {
       const INPUT_FIELD = document.querySelector('#heatinput_table')

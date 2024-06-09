@@ -1,10 +1,10 @@
 <template>
   <div @click="toggleModal($event)" :id="eID" class="table_elementContainer flex-evenly flex-column"
    :class="{
-    'uncertain':  heatState('uncertain', element),
-    'solid':      heatState('solid', element),
-    'liquid':     heatState('liquid', element),
-    'gas':        heatState('gas', element),
+    'uncertain':  heatState === 'uncertain',
+    'solid':      heatState === 'solid',
+    'liquid':     heatState === 'liquid',
+    'gas':        heatState === 'gas',
     'colored': !heat_view
   }">
   
@@ -17,7 +17,7 @@
       
       <img v-show="heat_view"
         class="heatState fade"
-        :src="displayHeatState(element)"
+        :src="this.states[this.heatState] || ''"
       />
     </div>
     <div class="table_symbol preventMouseEvent" :class="{'colored': !heat_view}" >{{ element.symbol }}</div>
@@ -29,111 +29,94 @@
 </template>
 
 <script>
-  export default {
-    props: { element: Object, heat_value: [Number, String], heat_changed: Boolean, heat_view: Boolean, eID: String },
-    data() {
-      const elementCategory = this.element.category_code
-      const categoryColors = {
-        'alkaline_metals': '#ffaf80',          // turuncu
-        'alkaline_metals_shade': '#ef9851',
+export default {
+  props: { element: Object, heat_value: [Number, String], heat_changed: Boolean, heat_view: Boolean, eID: String },
+  data() {
+    const elementCategory = this.element.category_code;
+    const categoryColors = {
+      'alkaline_metals': '#ffaf80',          // turuncu
+      'alkaline_metals_shade': '#ef9851',
 
-        'alkaline_earth_metal': '#80ff8e',   // yeşi
-        'alkaline_earth_metal_shade': '#44e053',
+      'alkaline_earth_metal': '#80ff8e',   // yeşil
+      'alkaline_earth_metal_shade': '#44e053',
 
-        'transition_metal': '#ffef80',          // sarı
-        'transition_metal_shade': '#c1b45f',
+      'transition_metal': '#ffef80',          // sarı
+      'transition_metal_shade': '#c1b45f',
 
-        'post_transition_metal': '#80d5ff',  // mavi
-        'post_transition_metal_shade': '#52c5fe',
+      'post_transition_metal': '#80d5ff',  // mavi
+      'post_transition_metal_shade': '#52c5fe',
 
-        'metalloid': '#8095ff',               // slate
-        'metalloid_shade': '#526efe',
+      'metalloid': '#8095ff',               // slate
+      'metalloid_shade': '#526efe',
 
-        'reactive_nonmetal': '#ff80d4',        // pembe
-        'reactive_nonmetal_shade': '#fe52c4',
+      'reactive_nonmetal': '#ff80d4',        // pembe
+      'reactive_nonmetal_shade': '#fe52c4',
 
-        'noble_gas': '#aa80ff',               // lila
-        'noble_gas_shade': '#8b52fe',
+      'noble_gas': '#aa80ff',               // lila
+      'noble_gas_shade': '#8b52fe',
 
-        'lanthanides': '#c3ff80',              // yeşil
-        'lanthanides_shade': '#adfe52',
+      'lanthanides': '#c3ff80',              // yeşil
+      'lanthanides_shade': '#adfe52',
 
-        'actinides': '#80fffc',               // teal
-        'actinides_shade': '#52fefa',
+      'actinides': '#80fffc',               // teal
+      'actinides_shade': '#52fefa',
 
-        'unknown': '#fff',               // beyaz
-        'unknown_shade': '#e0e0e0'
+      'unknown': '#fff',               // beyaz
+      'unknown_shade': '#e0e0e0'
+    };
+    return {
+      modalViewable: false,
+      colorCode: categoryColors[elementCategory] || '#fff',
+      colorCodeShaded: categoryColors[elementCategory + '_shade'] || '#fff',
+      states: {
+        solid:      require("../resources/img/states/solid.svg"),
+        liquid:     require("../resources/img/states/liquid.svg"),
+        gas:        require("../resources/img/states/gas.svg"),
+        uncertain:  require("../resources/img/states/uncertain.svg"),
+      },
+    };
+  },
+  computed: {
+    heatState() {
+      if (!this.heat_view) return '';
+
+      if ((this.element.boil_use === '' && this.element.melt_use === '') ||
+          (this.element.melt_use === '' && this.heat_value <= this.element.boil_use) ||
+          (this.element.boil_use === '' && this.heat_value <= this.element.melt_use)) {
+        return 'uncertain';
       }
-      return {
-        modalViewable: false,
-        colorCode: categoryColors[elementCategory] || '#fff',
-        colorCodeShaded: categoryColors[elementCategory+'_shade'] || '#fff',
-        colorHeat: this.heat_value,
-        states: {
-          solid:      require("../resources/img/states/solid.svg"),
-          liquid:     require("../resources/img/states/liquid.svg"),
-          gas:        require("../resources/img/states/gas.svg"),
-          uncertain:  require("../resources/img/states/uncertain.svg"),
-        },
-        elementSymbol: this.element.symbol,
-        settingDefaultsOnLoad: true
+
+      if (this.element.melt_use !== '' && this.heat_value <= this.element.melt_use) {
+        return 'solid';
       }
+
+      if (this.element.melt_use !== '' && this.heat_value >= this.element.melt_use && this.heat_value < this.element.boil_use) {
+        return 'liquid';
+      }
+
+      if (this.element.boil_use !== '' && this.heat_value >= this.element.boil_use) {
+        return 'gas';
+      }
+
+      return '';
     },
-    methods: {
-      toggleModal($event) {
-        let eventTarget = $event.target
+  },
+  methods: {
+    toggleModal($event) {
+      let eventTarget = $event.target;
 
-        if (eventTarget.classList.contains('close-modal') || eventTarget.classList.contains('overlay')) {
-          this.modalViewable = false
-          return
-        }
-        
-        if (!eventTarget.closest('.table_elementBlock')) return
-        this.modalViewable = !this.modalViewable
-      },
-      toggleInfo($event) {
-        let eventTarget = $event.target
-        if (eventTarget.classList.contains('close-modal') || eventTarget.classList.contains('overlay')) {
-          this.modalViewable = false
-          return
-        }
+      if (eventTarget.classList.contains('close-modal') || eventTarget.classList.contains('overlay')) {
+        this.modalViewable = false;
+        return;
+      }
 
-        if (eventTarget.classList.contains('modal-open')) return
-        if (eventTarget.classList.contains('modal')) return
-        if (!eventTarget.closest('.table_elementBlock')) return
-        this.modalViewable = false
-      },
-      heatState(check, element) {
-        switch (check) {
-          case 'uncertain':
-            return this.heat_view && ((element.boil_use === '' && element.melt_use === '') ||
-              (element.melt_use === '' && this.heat_value <= element.boil_use) ||
-              (element.boil_use === '' && this.heat_value <= element.melt_use));
-          case 'solid':
-            return this.heat_view && (element.melt_use !== '' && this.heat_value <= element.melt_use);
-          case 'liquid':
-            return this.heat_view && element.melt_use !== '' && this.heat_value >= element.melt_use;
-          case 'gas':
-            return this.heat_view && element.boil_use !== '' && this.heat_value >= element.boil_use;
-          default:
-            return false;
-        }
-      },
-      displayHeatState(element) {
-        if (this.heat_view)
-        {
-          let result = '' 
-          if ((element.boil_use === '' && element.melt_use === '') || (element.melt_use === '' && this.heat_value <= element.boil_use) || (element.boil_use === '' && this.heat_value <= element.melt_use)) result = this.states.uncertain // `Belirsiz`;
-          if (element.melt_use !== '' && this.heat_value <= element.melt_use) result = this.states.solid // `🪨`
-          if (element.melt_use !== '' && this.heat_value >= element.melt_use) result = this.states.liquid // `💦`
-          if (element.boil_use !== '' && this.heat_value >= element.boil_use) result = this.states.gas // `♨️`
-          
-          return result
-        }
-      },
-    }
+      if (!eventTarget.closest('.table_elementBlock')) return;
+      this.modalViewable = !this.modalViewable;
+    },
   }
+};
 </script>
+
 
 <style lang="scss" scoped>
   .table_elementContainer {
