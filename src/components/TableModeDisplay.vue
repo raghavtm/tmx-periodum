@@ -767,7 +767,7 @@ export default {
     this.viewGroupStylizer()
     this.updateDebouncedHeatValue = debounce(() => {
       this.debouncedHeatValue = this.heatValue;
-    }, 300);
+    }, 100);
 
     this.updateDebouncedHeatValue();
 

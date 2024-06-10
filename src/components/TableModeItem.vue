@@ -80,11 +80,11 @@ export default {
     heatState() {
       if (!this.heat_view) return '';
 
-      if (this.element.boil_use !== "" && this.heat_value >= this.element.boil_use)
+      if (this.element.boil_use !== "" && this.debouncedHeatValue >= this.element.boil_use)
         return "gas";
-      else if (this.element.melt_use !== "" && this.heat_value >= this.element.melt_use)
+      else if (this.element.melt_use !== "" && this.debouncedHeatValue >= this.element.melt_use)
         return "liquid";
-      else if (this.element.melt_use !== "" && this.heat_value <= this.element.melt_use)
+      else if (this.element.melt_use !== "" && this.debouncedHeatValue <= this.element.melt_use)
       return "solid";
 
       else
