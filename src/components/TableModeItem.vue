@@ -30,7 +30,7 @@
 
 <script>
 export default {
-  props: { element: Object, heat_value: [Number, String], heat_changed: Boolean, heat_view: Boolean, eID: String },
+  props: { element: Object, heat_value: [Number, String], heat_changed: Boolean, heat_view: Boolean, eID: String, debouncedHeatValue: [Number, String] },
   data() {
     const elementCategory = this.element.category_code;
     const categoryColors = {
@@ -104,7 +104,7 @@ export default {
       if (!eventTarget.closest('.table_elementBlock')) return;
       this.modalViewable = !this.modalViewable;
     },
-  }
+  },
 };
 </script>
 
