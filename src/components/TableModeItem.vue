@@ -80,25 +80,16 @@ export default {
     heatState() {
       if (!this.heat_view) return '';
 
-      if ((this.element.boil_use === '' && this.element.melt_use === '') ||
-          (this.element.melt_use === '' && this.heat_value <= this.element.boil_use) ||
-          (this.element.boil_use === '' && this.heat_value <= this.element.melt_use)) {
-        return 'uncertain';
-      }
+      if (this.element.boil_use !== "" && this.heat_value >= this.element.boil_use)
+        return "gas";
+      else if (this.element.melt_use !== "" && this.heat_value >= this.element.melt_use)
+        return "liquid";
+      else if (this.element.melt_use !== "" && this.heat_value <= this.element.melt_use)
+      return "solid";
 
-      if (this.element.melt_use !== '' && this.heat_value <= this.element.melt_use) {
-        return 'solid';
-      }
+      else
+        return "uncertain";
 
-      if (this.element.melt_use !== '' && this.heat_value >= this.element.melt_use && this.heat_value < this.element.boil_use) {
-        return 'liquid';
-      }
-
-      if (this.element.boil_use !== '' && this.heat_value >= this.element.boil_use) {
-        return 'gas';
-      }
-
-      return '';
     },
   },
   methods: {
