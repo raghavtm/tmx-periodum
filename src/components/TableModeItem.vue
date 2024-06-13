@@ -8,6 +8,7 @@
     'colored': !heat_view
   }">
   
+  <div class="table_atomicNumberContainer">
     <div class="flex-between preventMouseEvent">
       <div
         class="table_atomicNumber"
@@ -20,6 +21,7 @@
         :src="this.states[this.heatState] || ''"
       />
     </div>
+  </div> 
     <div class="table_symbol preventMouseEvent" :class="{'colored': !heat_view}" >{{ element.symbol }}</div>
     <div class="table_name preventMouseEvent" :class="{'colored': !heat_view}"> {{ element.name }} </div>
     <div class="table_atomicMass preventMouseEvent" :class="{'colored': !heat_view}">{{ Math.round(element.atomic_mass) }}</div>
@@ -121,7 +123,7 @@ export default {
     background-image: linear-gradient(136deg, #272f3f 0%, #1d232f 100%);
     
     /* color: whitesmoke; */
-    padding: .3vw;
+    padding: .2vw;
     
     justify-self: flex-start;
     margin-top: -.13vw;
@@ -179,13 +181,14 @@ export default {
   }
 
   .table_atomicNumber {
-    font-size: .45vw;
+    font-size: .25vh;
     opacity: .7;
 
     color: unset;
   }
 
   .table_symbol {
+    margin-top: 2px;
     width: 100%;
     display: flex;
     justify-content: center;
@@ -204,14 +207,14 @@ export default {
   }
   .table_name {
     color: inherit;
-    font-size: .55vw;
+    font-size: .45vw;
     opacity: .9;
     opacity: .7;
   }
   
   .table_atomicMass {
     font-weight: 100;
-    font-size: .45vw;
+    font-size: .25vh;
     opacity: .7;
   }
   
@@ -220,5 +223,11 @@ export default {
     position: static;
     width: .7vw;
     height: .7vw;
+  }
+
+  .table_atomicNumberContainer {
+    position: absolute; 
+    top: 0.3vw;
+    width: 85%;
   }
 </style>
