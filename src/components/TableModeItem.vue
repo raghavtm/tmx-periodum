@@ -1,5 +1,5 @@
 <template>
-  <div @click="toggleModal($event)" :id="eID" class="table_elementContainer flex-evenly flex-column"
+  <div @click="toggleModal($event)" :id="eID" class="table_elementContainer flex-evenly flex-column overflow-hidden"
    :class="{
     'uncertain':  heatState === 'uncertain',
     'solid':      heatState === 'solid',
@@ -22,7 +22,7 @@
     </div>
     <div class="table_symbol preventMouseEvent" :class="{'colored': !heat_view}" >{{ element.symbol }}</div>
     <div class="table_name preventMouseEvent" :class="{'colored': !heat_view}"> {{ element.name }} </div>
-    <div class="table_atomicMass preventMouseEvent" :class="{'colored': !heat_view}">{{ element.atomic_mass }}</div>
+    <div class="table_atomicMass preventMouseEvent" :class="{'colored': !heat_view}">{{ Math.round(element.atomic_mass) }}</div>
     <span class="table_elementBlock inactive">{{ 'table_groupFilter_' + element.block }}</span>
     <span class="table_elementCategory inactive">{{ element.category_code }}</span>
   </div>
