@@ -95,7 +95,7 @@
     <!-- if (table_compoundMode) compoundAdd($event); else  COMPOUND MODU İÇİN ÖNEMLİ!!!! -->
     <div class="element noselect" :style="{ 'grid-row-start': element.ypos, 'grid-column-start': element.xpos}"
         v-for="element in elements" :key="element.number">
-      <div @click.prevent="if (table_compoundMode) compoundAdd($event); else toggleModal($event, element)" @mouseover="if (table_summaryMode) displaySummary(elements.indexOf(element));"> <TableItem :eID="`table_${element.number}_${element.name}`" :heat_view="table_heatMode" :heat_value="Number(heatValue)" :element="element"> {{ element }} </TableItem> </div>
+      <div @click.prevent="if (table_compoundMode) compoundAdd($event); else toggleModal($event, element)" @mouseover="if (table_summaryMode) displaySummary(elements.indexOf(element));"> <TableItem :eID="`table_${element.number}_${element.name}`" :heat_view="table_heatMode" :heat_value="Number(heatValue)" :debouncedHeatValue="Number(debouncedHeatValue)" :element="element"> {{ element }} </TableItem> </div>
     </div>
     
   </div>
@@ -113,6 +113,7 @@
 
 <script>
 import TableItem from '@/components/TableModeItem.vue'
+import { debounce } from 'lodash';
 
 export default {
   components: { TableItem },
@@ -128,6 +129,7 @@ export default {
       table_heatMode: false,
       table_compoundMode: false,
       heatValue: 298.15,
+      debouncedHeatValue: 298.15,
       lastIndexOfHoveredItem: 0,
       lastChosenFilter: '',
       lastChosenMainFilter: '',
@@ -164,7 +166,7 @@ export default {
         F: 'unit => (unit+459.67)*5/9'
       },
       heat_toDisplay_table: 0,
-      language: 'en'
+      language: 'en',
     }
   },
   methods: {
@@ -500,7 +502,8 @@ export default {
       }
     },
     sliderChange() {
-      if (this.heatValue !== 298.15 && !document.querySelector('#table_moduleBtn_heatMode').textContent.includes('🗘')) document.querySelector('#table_moduleBtn_heatMode').textContent = '🗘 ' + this.locale.modules.heat;
+
+      // Define STATES constant
       const STATES = {
         uncertain: 'uncertain',
         solid: 'solid',
@@ -508,40 +511,37 @@ export default {
         liquid: 'liquid',
       };
 
-      Object.keys(STATES).forEach(state => document.querySelectorAll(`.${state}`).forEach(function(el) {
-        el.removeAttribute('class')
-        el.classList.add(`table_elementContainer`)
-        el.classList.add(`flex-evenly`)
-        el.classList.add(`flex-column`)
-        el.classList.add(`${state}`)
-        el.classList.remove('mute')
-        el.classList.remove('glow')
-      }))
-      
-      this.metric_Initials.K = this.heatValue
+      // Update element classes
+      Object.values(STATES).forEach(state => {
+        document.querySelectorAll(`.${state}`).forEach(el => {
+          el.className = `table_elementContainer flex-evenly flex-column ${state}`;
+        });
+      });
 
-      const toC = eval(this.metricConvertion.C)
-      const toF = eval(this.metricConvertion.F)
+      this.metric_Initials.K = this.heatValue;
+      const toC = eval(this.metricConvertion.C);
+      const toF = eval(this.metricConvertion.F);
+      this.metric_Initials.C = toC(Number(this.metric_Initials.K));
+      this.metric_Initials.F = toF(Number(this.metric_Initials.K));
 
-      this.metric_Initials.C = toC(Number(this.metric_Initials.K))
-      this.metric_Initials.F = toF(Number(this.metric_Initials.K))
+      // Update displayed heat value
+      const SELECTION = document.querySelector('.metricmenu_table').textContent;
+      this.heat_toDisplay_table = this.metric_Initials?.[SELECTION];
 
-      const SELECTION = document.querySelector('.metricmenu_table').textContent
-      this.heat_toDisplay_table = this.metric_Initials?.[SELECTION]
+      // Button activation/deactivation
+      const buttonStates = {
+        uncertain: document.querySelector('#uncertain'),
+        solid: document.querySelector('#solid'),
+        liquid: document.querySelector('#liquid'),
+        gas: document.querySelector('#gas'),
+      };
 
-      const BUTTON_UNCERTAIN = document.querySelector('#uncertain')
-      const BUTTON_SOLID = document.querySelector('#solid')
-      const BUTTON_LIQUID = document.querySelector('#liquid')
-      const BUTTON_GAS = document.querySelector('#gas')
-
-      document.querySelectorAll('.uncertain').length >= 1
-      ? BUTTON_UNCERTAIN.classList.remove('inactive') : BUTTON_UNCERTAIN.classList.add('inactive')
-      document.querySelectorAll('.liquid').length >= 1
-      ? BUTTON_LIQUID.classList.remove('inactive') : BUTTON_LIQUID.classList.add('inactive')
-      document.querySelectorAll('.gas').length >= 1
-      ? BUTTON_GAS.classList.remove('inactive') : BUTTON_GAS.classList.add('inactive')
-      document.querySelectorAll('.solid').length >= 1
-      ? BUTTON_SOLID.classList.remove('inactive') : BUTTON_SOLID.classList.add('inactive')
+      Object.keys(buttonStates).forEach(state => {
+        const button = buttonStates[state];
+        document.querySelectorAll(`.${state}`).length >= 1
+          ? button.classList.remove('inactive')
+          : button.classList.add('inactive');
+      });
     },
     heatinputAction() {
       const INPUT_FIELD = document.querySelector('#heatinput_table')
@@ -563,7 +563,6 @@ export default {
         SLIDER.value = +(INPUT_FIELD.value)
         SLIDER.dispatchEvent(new Event('input'));
       }
-
       this.sliderChange()
       return
     },
@@ -766,6 +765,13 @@ export default {
   },
   mounted() {
     this.viewGroupStylizer()
+    this.updateDebouncedHeatValue = debounce(() => {
+      this.debouncedHeatValue = this.heatValue;
+    }, 100);
+
+    this.updateDebouncedHeatValue();
+
+    this.$watch('heatValue', this.updateDebouncedHeatValue);
     
     if (!/\?=/.test(window.location.href)) return
 
